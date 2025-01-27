@@ -20,7 +20,7 @@ CloudShield is a web application that helps users identify and mitigate potentia
 ## Installation
 
 1. Clone the repository:
-git clone https://github.com/tloving45/cloud-security-analyzer.git
+git clone https://github.com/tloving45/cloudshield.git
 cd cloudshield
 
 2. Create a virtual environment (optional but recommended):
