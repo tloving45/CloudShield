@@ -1,4 +1,5 @@
 # CloudShield
+
 Security JSON Scanner
 
 ## Overview
@@ -20,30 +21,28 @@ CloudShield is a web application that helps users identify and mitigate potentia
 ## Installation
 
 1. Clone the repository:
-git clone https://github.com/tloving45/cloudshield.git
-cd cloudshield
+   git clone https://github.com/tloving45/cloudshield.git
+   cd cloudshield
 
 2. Create a virtual environment (optional but recommended):
-python -m venv venv
-source venv/bin/activate # On Windows, use venv\Scripts\activate
+   python -m venv venv
+   source venv/bin/activate # On Windows, use venv\Scripts\activate
 
 3. Install the required packages:
-pip install -r requirements.txt
-
+   pip install -r requirements.txt
 
 ## Configuration
 
 1. Create an `uploads` directory in the project root:
-mkdir uploads
+   mkdir uploads
 
 2. (Optional) Adjust the maximum file size in `app.py`:
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 # 16MB max file size
-
+   app.config['MAX_CONTENT_LENGTH'] = 16 _ 1024 _ 1024 # 16MB max file size
 
 ## Running the Application
 
 1. Start the Flask application:
-python app.py
+   python app.py
 
 2. The application will start running on `http://localhost:5000`
 
@@ -61,16 +60,13 @@ curl -X POST -F "file=@/path/to/your/config.json" http://localhost:5000/upload
 ### Interpreting the Results
 
 The application will return a JSON response with:
+
 - A summary of identified security issues
 - Detailed descriptions of each issue
 - Recommendations for mitigating each issue
 
-## Screenshots
-
-### File Upload Interface
-![File Upload Interface](https://example.com/file_upload_interface.png)
-
 ### Analysis Results
+
 ![Analysis Results](https://example.com/analysis_results.png)
 
 ## Security Considerations
