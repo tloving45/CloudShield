@@ -1,0 +1,69 @@
+from flask import Flask, render_template, request, jsonify
+import json
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file part'}), 400
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'}), 400
+        if file and file.filename.endswith('.json'):
+            try:
+                config = json.load(file)
+                report = analyze_config(config)
+                return jsonify(report)
+            except json.JSONDecodeError:
+                return jsonify({'error': 'Invalid JSON file'}), 400
+        else:
+            return jsonify({'error': 'Invalid file type. Please upload a JSON file.'}), 400
+    return render_template('upload.html')
+
+def analyze_config(config):
+    issues = []
+    for resource in config.get('resources', []):
+        resource_issues = check_resource(resource)
+        issues.extend(resource_issues)
+    return generate_report(issues)
+
+def check_resource(resource):
+    issues = []
+    if resource['type'] == 'virtual_machine':
+        if not resource.get('encryption', False):
+            issues.append({
+                'resource': resource['name'],
+                'issue': 'Disk encryption is not enabled',
+                'recommendation': 'Enable disk encryption for the virtual machine'
+            })
+        if not resource.get('mfa_enabled', False):
+            issues.append({
+                'resource': resource['name'],
+                'issue': 'Multi-factor authentication is not enabled',
+                'recommendation': 'Enable MFA for accessing the virtual machine'
+            })
+        if 22 in resource.get('open_ports', []):
+            issues.append({
+                'resource': resource['name'],
+                'issue': 'SSH port (22) is open',
+                'recommendation': 'Restrict SSH access or use a VPN for remote access'
+            })
+    elif resource['type'] == 'storage_account':
+        if not resource.get('encryption', False):
+            issues.append({
+                'resource': resource['name'],
+                'issue': 'Storage account encryption is not enabled',
+                'recommendation': 'Enable encryption for the storage account'
+            })
+    return issues
+
+def generate_report(issues):
+    return {
+        'summary': f'Found {len(issues)} security issues',
+        'issues': issues
+    }
+
+if __name__ == '__main__':
+    app.run(debug=True)

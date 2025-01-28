@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudShield Security Analyzer</title>
+</head>
+<body>
+    <h1>Cloud Security Analyzer</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".json">
+        <input type="submit" value="Upload and Analyze">
+    </form>
+    <div id="report"></div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const reportDiv = document.getElementById('report');
+                reportDiv.innerHTML = `<h2>${data.summary}</h2>`;
+                data.issues.forEach(issue => {
+                    reportDiv.innerHTML += `
+                        <h3>Resource: ${issue.resource}</h3>
+                        <p><strong>Issue:</strong> ${issue.issue}</p>
+                        <p><strong>Recommendation:</strong> ${issue.recommendation}</p>
+                    `;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
